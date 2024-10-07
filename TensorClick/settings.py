@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from project_helpers import configure_database
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -49,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'TensorClick_.urls'
+ROOT_URLCONF = 'TensorClick.urls'
 
 TEMPLATES = [
     {
@@ -67,18 +68,30 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'TensorClick_.wsgi.application'
+WSGI_APPLICATION = 'TensorClick.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+if DEBUG:
+    DATABASES = {
+        # default client is
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "tensorclick_db",
+            # here - change this database user to the one that has only necessary privileges
+            "USER": "postgres",
+            # here - pass you correct password, or hide it with any secrets manager of your liking
+            "PASSWORD": "mypassword123",
+            "HOST": "127.0.0.1",
+            "PORT": "5432",
+        }
     }
-}
+else:
+    # to be configured by external function
+    DATABASES = configue_database()
 
 
 # Password validation
